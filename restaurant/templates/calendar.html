@@ -1,0 +1,44 @@
+{% extends "_base.html" %}
+
+{% block title %}
+    <h1>Opening Hours</h1>
+{% endblock title %}
+
+{% block content %}
+
+    
+    <div class="grid grid-cols-7">
+    {% comment %} Weekday names {% endcomment %}
+    {% for dayname in weekdays %}
+        <div class="bg-yellow-200 border">{{ dayname.1 }}</div>
+    {% endfor %}
+
+    {% comment %} skipped cells {% endcomment %}
+    {% for _ in offset_range%}
+        <div class="bg-gray-50 border"></div>
+    {% endfor %}
+
+    {% comment %} days {% endcomment %}
+    {% for day in days %}
+        <div> {{day.1}} </div>
+    {% endfor %}
+    </div>
+
+    {% comment %} Make a input bar on the side {% endcomment %}
+    <div class="grid grid-cols-1">
+        <div class="bg-gray-50 border">
+            <form action="/openinghours" method="post">
+                <label for="day">Day</label>
+                <select name="day" id="day">
+                    {% for day in days %}
+                        <option value="{{day.0}}">{{day.1}}</option>
+                    {% endfor %}
+                </select>
+                <label for="open">Open</label>
+                <input type="time" name="open" id="open">
+                <label for="close">Close</label>
+                <input type="time" name="close" id="close">
+                <input type="submit" value="Submit">
+            </form>
+        </div>
+{% endblock content %}

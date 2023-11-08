@@ -49,7 +49,7 @@ class OpeningHoursSpecific(models.Model):
     # Could have used OpeningHours as parent class, but would require some (maybe unnecessary) abstraction
     DEFAULT_OPEN_TIME = "08:00"
     DEFAULT_CLOSE_TIME = "22:00"
-    date = models.DateField(null=False,black=False,unique=True)
+    date = models.DateField(null=False,blank=False,unique=True)
     open_time = models.TimeField(default=DEFAULT_OPEN_TIME)
     close_time = models.TimeField(default=DEFAULT_CLOSE_TIME)
     
@@ -88,12 +88,19 @@ class MenuItem(models.Model):
 
 
 class Order(models.Model):
+    class Status(models.IntegerChoices):
+        PENDING = 0
+        IN_PROGRESS = 1
+        COMPLETED = 2
+        CANCELLED = 3
+    
+    
     name = models.CharField(max_length=100)
     phone_number = models.CharField(max_length=20)
     datetime = models.DateTimeField()
     order = models.TextField()
     items = models.ManyToManyField(MenuItem)
-    status = models.Choices("Pending", "In Progress", "Completed", "Cancelled")
+    status = models.IntegerField()
     total_price = models.DecimalField(max_digits=5, decimal_places=2)
     
     def __str__(self):
@@ -114,8 +121,6 @@ class Order(models.Model):
     def set_cancelled(self):
         self.status = "Cancelled"
         self.save()
-
-
 
 
 # Create your models here.
