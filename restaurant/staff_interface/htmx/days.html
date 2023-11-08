@@ -1,0 +1,11 @@
+<div class="opening-hours-grid-container">
+  {% for i in '0123456' %}
+    <div class="grid-item">{{ task.days }}</div>
+  {% endfor %}
+</div>
+
+
+.opening-hours-grid-container {
+    display: grid;
+    grid-template-columns: auto auto auto auto auto auto auto;
+}
