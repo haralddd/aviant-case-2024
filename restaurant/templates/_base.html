@@ -1,4 +1,5 @@
 {% load static tailwind_tags %}
+{% load static %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -13,24 +14,38 @@
   </head>
   <body>
     {% block sidebar %}
-    <nav class="flex fixed w-32 items-center justify-between px-6 h-auto bg-white text-gray-700 border-b border-r border-gray-200"
+    <nav class="flex fixed text-lg w-48 text-center items-center justify-between h-auto bg-white text-gray-700 border-b border-r border-gray-200 p-2"
       >
+
+      
       <!-- default navigation text for every page -->
 
       <ul>
-        <li class="hover:bg-yellow-200"><a href="{% url 'index' %}">Home</a></li>
-        <li class="hover:bg-yellow-200"><a href="{% url 'menu' %}">Menu</a></li>
-        <li class="hover:bg-yellow-200"><a href="{% url 'calendar' %}">Calendar</a></li>
-        <li class="hover:bg-yellow-200"><a href="{% url 'orders' %}">Orders</a></li>
-        <li class="hover:bg-yellow-200"><a href="{% url 'statistics' %}">Statistics</a></li>
+
+        <img src="{% static 'cursed-pizza.png' %}" alt="Cursed pizza logo">
+        <li class="pb-2 text-sm">cursedpizza.com</li>
+        <a href="{% url 'index' %}"><li class="hover:bg-yellow-200 h-8 border">Home</li></a>
+        <a href="{% url 'menu' %}"><li class="hover:bg-yellow-200 h-8 border">Menu</li></a>
+        <a href="{% url 'calendar' %}"><li class="hover:bg-yellow-200 h-8 border">Calendar</li></a>
+        <a href="{% url 'orders' %}"><li class="hover:bg-yellow-200 h-8 border">Orders</li></a>
+        <a href="{% url 'statistics' %}"><li class="hover:bg-yellow-200 h-8 border">Statistics</li></a>
       </ul>
 
     </nav>
     {% endblock %}
-    <div class="flex flex-col ml-36">
-      {% block content %}
-        <!-- default content text (typically empty) -->
-      {% endblock %}
+    <div class="flex flex-col ml-48">
+
+      <div class="w-2/3 m-2">
+        <div class="bg-blue-200 border rounded-md p-2 m-1 text-center text-xl">
+        {% block pagetitle%}
+        Cursedpizza.com
+          <!-- default page title text (typically empty) -->
+        {% endblock %}
+        </div>
+        {% block content %}
+          <!-- default content text (typically empty) -->
+        {% endblock %}
+      </div>
     </div>
   </body>
 </html>

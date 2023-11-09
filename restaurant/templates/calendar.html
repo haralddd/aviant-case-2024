@@ -1,32 +1,28 @@
 {% extends "_base.html" %}
 
+{% block pagetitle %} Calendar {% endblock pagetitle %}
+
 {% block content %}
 
-    {% comment %} Make nice centered header with text calendar {% endcomment %}
-    
-    <div class="bg-blue-200 border w-2/3">
-        <h1 class="text-center text-xl">Calendar</h1>
-    </div>
-    <div class="grid grid-cols-7 w-2/3">
+    <div class="grid grid-cols-7 text-center">
     {% comment %} Weekday names {% endcomment %}
-    {% for dayname in weekdays %}
-    
-        <div class="bg-blue-100 border">{{ dayname.1 }}</div>
-    
-    {% endfor %}
+        {% for dayname in weekdays %}
+        
+            <div class="bg-blue-100 border rounded-md m-1"><b>{{ dayname.1 }}</b></div>
+        
+        {% endfor %}
 
-    {% comment %} skipped cells {% endcomment %}
-    {% for _ in offset_range%}
-        <div></div>
-    {% endfor %}
+        {% for _ in offset_range%}
+            <div></div>
+        {% endfor %}
 
-    {% comment %} days {% endcomment %}
-    {% for day,hours in days.items %}
-    <div class="h-16">
-        <div class="bg-gray-50 border h-full"> <div>{{day}}</div> <div>{{hours}} </div></div> 
-    </div>
+        {% for day,hours in days.items %}
+        <div class="h-16 bg-gray-100 border rounded-md p-2 m-1">
+            <div>{{day}}</div> <div>{{hours}} </div>
+        </div>
         {% endfor %}
     </div> 
 
     {% include "submit_recurring_hours.html" %}
+    
 {% endblock content %}

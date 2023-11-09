@@ -121,6 +121,9 @@ class Order(models.Model):
     def set_cancelled(self):
         self.status = "Cancelled"
         self.save()
+    
+    def get_status_str(self):
+        return self.Status(self.status).name
         
     def get_total_price(self):
         total_price = 0

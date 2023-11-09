@@ -29,11 +29,11 @@ def show_calendar(request: HttpRequest):
     cur_date = from_date
     
     while cur_date <= to_date:
-        cur_hours = hours_recurring.filter(day=cur_date.weekday())[0]
-        if cur_hours is None:
+        cur_hours = hours_recurring.filter(day=cur_date.weekday())
+        if not cur_hours:
             date_range[cur_date.strftime("%d.%m")] = "Closed"
         else:
-            cur_hours = cur_hours.open_time.strftime("%H:%M") + " - " + cur_hours.close_time.strftime("%H:%M")
+            cur_hours = cur_hours[0].open_time.strftime("%H:%M") + " - " + cur_hours[0].close_time.strftime("%H:%M")
             date_range[cur_date.strftime("%d.%m")] = cur_hours
         cur_date += timedelta(days=1)
     
@@ -56,30 +56,21 @@ def show_calendar(request: HttpRequest):
     
 def show_orders(request: HttpRequest):
     context = {
-        'PENDING': [],
-        'IN_PROGRESS': [],
-        'COMPLETED': [],
-        'CANCELLED': [],
+        Order.Status.PENDING.name: [],
+        Order.Status.IN_PROGRESS.name: [],
+        Order.Status.COMPLETED.name: [],
+        Order.Status.CANCELLED.name: [],
     }
     
-    all_orders = Order.objects.all().order_by('datetime')
+    all_orders = Order.objects.all().order_by('-datetime')
     
-    for (i,key) in zip(Order.Status.values, context.keys()):
-        for (j,order) in enumerate(all_orders.filter(status=i)):
-            if order.items is None:
-                continue
-            
-            items_query = order.items.all()
-            
-            # Make a nice string of all items in the order
-            menu_items = [f"{item.name}" for item in items_query]
-            
-            order_details = ([str(order.name),
-                            str(order.phone_number),
-                            order.datetime.strftime('%Y-%m-%d: %H:%M')],
-                            menu_items)
+    for order in all_orders:
+        items_query = order.items.all()
+        if not items_query:
+            continue
         
-            context[key].append(order_details)
+    
+        context[order.get_status_str()].append(order)
         
     return render(request, 'orders.html',context=context)
 
@@ -88,10 +79,41 @@ def show_statistics(request: HttpRequest):
     
     all_orders = Order.objects.all().order_by('datetime')
     
-    # for 
-        
-    context['avg_weekday_orders'] = [0,0,0,0,0,0,0]
+    sums = [0,0,0,0,0,0,0]
+    counts = [0,0,0,0,0,0,0]
+    for order in all_orders:
+        week_day = order.datetime.weekday()
+        sums[week_day] += order.get_total_price()
+        counts[week_day] += 1
     
+    rec_hours_all = RecurringHours.objects.all()
+    
+    context['avg_weekday_orders'] = []
+    context['weekly_open_hours'] = 0
+    for i in range(7):
+        avg_income = round(sums[i]/counts[i],2) if counts[i] != 0 else 0
+        rec_hours = rec_hours_all.filter(day=i)
+        
+        if not rec_hours:
+            open_time_str = "Closed"
+            close_time_str = "Closed"
+            context['weekly_open_hours'] += 0
+            
+        else:
+            open_time = rec_hours[0].open_time if rec_hours else "Closed"
+            close_time = rec_hours[0].close_time if rec_hours else "Closed"
+            open_time_str = open_time.strftime('%H:%M')
+            close_time_str = close_time.strftime('%H:%M')
+            # Fix minutes some other    time
+            context['weekly_open_hours'] += close_time.hour - open_time.hour
+        
+        context['avg_weekday_orders'].append([
+            RecurringHours.weekdays.choices[i][1],
+            open_time_str, close_time_str,
+            counts[i], avg_income])
+        
+        
+    context['weekly_open_hours_avg'] = round(context['weekly_open_hours']/7, 2)
     return render(request, 'statistics.html', context=context)
 
 def show_menu(request: HttpRequest):
@@ -104,21 +126,54 @@ def submit_recurring_hours(request: HttpRequest):
     
     form = request.POST
     
-    day = form['day']
+    edit_day = form['day']
     open_time = form['open']
     close_time = form['close']
     
-    if day is None or open_time is None or close_time is None:
+    if 'closed' in form:
+        RecurringHours.objects.filter(day=int(edit_day)).delete()
         return redirect('calendar')
     
-    print(f"Day: {int(day)}: {open_time} - {close_time}")
+    
+    print(f"Day: {int(edit_day)}: {open_time} - {close_time}")
     print(f"Open as int: {int(open_time[:2])}, {int(open_time[3:-1])}")
     print(f"Close as int: {int(close_time[:2])}, {int(close_time[3:-1])}")
         
-    RecurringHours.objects.filter(day=int(day)
-            ).update(
-                open_time=time(int(open_time[:2]), int(open_time[3:])),
-                close_time=time(int(close_time[:2]), int(close_time[3:]))
-                )
+    existing_rule = RecurringHours.objects.filter(day=int(edit_day))
+    if not existing_rule:
+        RecurringHours.objects.create(
+            day=int(edit_day),
+            open_time=time(int(open_time[:2]), int(open_time[3:])),
+            close_time=time(int(close_time[:2]), int(close_time[3:]))
+            )
+    else:
+        existing_rule.update(
+                    open_time=time(int(open_time[:2]), int(open_time[3:])),
+                    close_time=time(int(close_time[:2]), int(close_time[3:]))
+                    )
     
     return redirect('calendar')
+
+def change_order_status(request: HttpRequest):
+    if request.method != 'POST':
+        return redirect('orders')
+    
+    form = request.POST
+    
+    order_id = form['order_id']
+    move_dir = form['move_dir']
+    
+    print(f"Order id: {order_id}")
+    
+    order = Order.objects.filter(pk=int(order_id))
+    if not order:
+        return redirect('orders')
+    
+    new_status = order[0].status + int(1 if move_dir == ">>" else -1)
+    order.update(status=new_status)
+    
+    print(f"Order {order_id} status changed to {new_status}")
+    
+    return redirect('orders')
+
+

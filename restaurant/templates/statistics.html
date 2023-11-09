@@ -1,22 +1,25 @@
 {% extends "_base.html" %}
 
+{% block pagetitle %} Statistics{% endblock %}
+
 
 {% block content %}
-    <p>Statistics</p>
-
-    <div>
-        <div>Weekly open hours:<br>
-            &emsp;{{ weekly_open_hours }}</div>
-        <div>Average open hours per day:<br>
-            &emsp;{{ weekly_open_hours_avg }}</div>
-        <div>
-            Averages per day:
-            <div class="grid grid-cols-5 w-1/2 pl-8 border">
-                <div>Day</div><div>Open</div><div>Close</div><div>Number of orders</div><div>Total income</div>
-                {% for day, open, close, orders, income in avg_weekday_orders %}
-                    <div>{{ day }}</div><div>{{ open }}</div><div>{{ close }}</div><div>{{ orders }}</div><div>{{ income }}</div>
-                {% endfor %}
-            </div>
+<div class="content-center">
+    <div class="p-1 m-auto">Weekly open hours: {{ weekly_open_hours }}</div>
+    <div class="p-1">Average open hours per day: {{ weekly_open_hours_avg }}</div>
+    <div class="text-center w-1/2 pl-8 pt-8">
+        Averages per day:
+        <div class="grid grid-cols-5">
+            <div class="border bg-blue-100">Day</div>
+            <div class="border bg-blue-100">Open</div>
+            <div class="border bg-blue-100">Close</div>
+            <div class="border bg-blue-100">Number of orders</div>
+            <div class="border bg-blue-100">Average income</div>
+            {% for day, open, close, orders, income in avg_weekday_orders %}
+                <div>{{ day }}</div><div>{{ open }}</div><div>{{ close }}</div><div>{{ orders }}</div><div>{{ income }}</div>
+            
+            {% endfor %}
         </div>
     </div>
+</div>
 {% endblock %}

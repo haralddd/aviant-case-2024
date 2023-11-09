@@ -1,110 +1,92 @@
 {% extends "_base.html" %}
 
+{% block pagetitle %} Orders {% endblock %}
+
 {% block content %}
-    <table class="table-fixed w-2/3 h-full overflow-scroll">
-        <thead>
-            <tc>
-                <th class="w-1/4">Pending</th>
-            </tc>
-            <tc>
-                <th class="w-1/4">In progress</th>
-            </tc>
-            <tc>
-                <th class="w-1/4">Completed</th>
-            </tc>
-            <tc>
-                <th class="w-1/4">Cancelled</th>
-            </tc>
-        </thead>
-        <tbody>
-            <tc>
-                {% for order in PENDING %}
-                <tr>
-                    <td class="h-auto">
-                        {% for details in order%}
-                            {{details}}
-                        {% endfor %}
-                    </td>
-                </tr>
+    <div class="grid grid-cols-4 text-center">
+
+        <div class="bg-blue-100 border text-center rounded-md m-1 text-lg"><b>Pending</b></div>
+        <div class="bg-blue-100 border text-center rounded-md m-1 text-lg"><b>In progress</b></div>
+        <div class="bg-blue-100 border text-center rounded-md m-1 text-lg"><b>Completed</b></div>
+        <div class="bg-blue-100 border text-center rounded-md m-1 text-lg"><b>Cancelled</b></div>
+
+        <div>
+            {% for order in PENDING %}
+            <div class="border bg-gray-100 rounded-md p-2 m-1 mb-2">
+                <div class=""><b>{{ order.name }}</b></div>
+                <div class="text-gray-600">{{ order.phone_number }}</div>
+                <div class="text-gray-600">{{ order.datetime|date:'Y/m/d - H:i' }}</div>
+                <div class="mb-2 text-gray-600">Total: {{ order.get_total_price }},-</div>
+                {% for item in order.items.all %}
+                    <div>{{ item }}&emsp;-&emsp;{{item.price}},-</div>
                 {% endfor %}
-                
-                {% for order in IN_PROGRESS %}
-                <tr>
-                    <td class="h-auto">
-                        {% for details in order%}
-                            {{details}}
-                        {% endfor %}
-                    </td>
-                </tr>
+                <form action="/change_order_status/" method="post">
+                    <input type="hidden" id="order_id" name="order_id" value="{{ order.pk }}"></input>
+                    <input type="submit" id="move_dir" name="move_dir" value=">>" class="button border w-24 bg-purple-300 border-purple-400 rounded-md "></input>
+                    {% csrf_token %}
+                </form>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div>
+            {% for order in IN_PROGRESS %}
+            <div class="border bg-gray-100 rounded-md p-2 m-1 mb-2 min-h-full">
+                <div class=""><b>{{ order.name }}</b></div>
+                <div class="text-gray-600">{{ order.phone_number }}</div>
+                <div class="text-gray-600">{{ order.datetime|date:'Y/m/d - H:i' }}</div>
+                <div class="mb-2 text-gray-600">Total: {{ order.get_total_price }},-</div>
+                {% for item in order.items.all %}
+                    <div>{{ item }}&emsp;-&emsp;{{item.price}},-</div>
                 {% endfor %}
-                {% for order in COMPLETED %}
-                <tr>
-                    <td class="h-auto">
-                        {% for details in order%}
-                            {{details}}
-                        {% endfor %}
-                    </td>
-                </tr>
+                <form action="/change_order_status/" method="post">
+                    <input type="hidden" id="order_id" name="order_id" value="{{ order.pk }}"></input>
+                    <input type="submit" id="move_dir" name="move_dir" value="<<" class="border w-24 bg-purple-300 border-purple-400 rounded-md"></input>
+                    <input type="submit" id="move_dir" name="move_dir" value=">>" class="border w-24 bg-purple-300 border-purple-400 rounded-md"></input>
+                    {% csrf_token %}
+                </form>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div>
+            {% for order in COMPLETED %}
+            <div class="border bg-gray-100 rounded-md p-2 m-1 mb-2 min-h-full">
+                <div class=""><b>{{ order.name }}</b></div>
+                <div class="text-gray-600">{{ order.phone_number }}</div>
+                <div class="text-gray-600">{{ order.datetime|date:'Y/m/d - H:i' }}</div>
+                <div class="mb-2 text-gray-600">Total: {{ order.get_total_price }},-</div>
+                {% for item in order.items.all %}
+                    <div>{{ item }}&emsp;-&emsp;{{item.price}},-</div>
                 {% endfor %}
-                {% for order in CANCELLED %}
-                <tr>
-                    <td class="h-auto">
-                        {% for details in order%}
-                            {{details}}
-                        {% endfor %}
-                    </td>
-                </tr>
+                <form action="/change_order_status/" method="post">
+                    <input type="hidden" id="order_id" name="order_id" value="{{ order.pk }}"></input>
+                    <input type="submit" id="move_dir" name="move_dir" value="<<" class="border w-24 bg-purple-300 border-purple-400 rounded-md"></input>
+                    <input type="submit" id="move_dir" name="move_dir" value=">>" class="border w-24 bg-purple-300 border-purple-400 rounded-md"></input>
+                    {% csrf_token %}
+                </form>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div>
+            {% for order in CANCELLED %}
+            <div class="border bg-gray-100 rounded-md p-2 m-1 mb-2">
+                <div class=""><b>{{ order.name }}</b></div>
+                <div class="text-gray-600">{{ order.phone_number }}</div>
+                <div class="text-gray-600">{{ order.datetime|date:'Y/m/d - H:i' }}</div>
+                <div class="mb-2 text-gray-600">Total: {{ order.get_total_price }},-</div>
+                {% for item in order.items.all %}
+                    <div>{{ item }}&emsp;-&emsp;{{item.price}},-</div>
                 {% endfor %}
-            </tc>
-            {% comment %} <tc>
-                {% for id,items in IN_PROGRESS.items %}
-                <tr>
-                    <td class="h-auto">
-                        {% for name,number,datetime in order%}
-                        {{Name}}
-                        {{number}}
-                        {{datetime}}
-                        {% endfor %}
-                        {% for item in items %}
-                        {{item}}
-                        {% endfor %}
-                    </td>
-                </tr>
-                {% endfor %}
-            </tc>
-            <tc>
-                {% for id,items in COMPLETED.items %}
-                <tr>
-                    <td class="h-auto">
-                        {% for name,number,datetime in order%}
-                        {{Name}}
-                        {{number}}
-                        {{datetime}}
-                        {% endfor %}
-                        {% for item in items %}
-                        {{item}}
-                        {% endfor %}
-                    </td>
-                </tr>
-                {% endfor %}
-            </tc>
-            <tc>
-                {% for id,items in CANCELLED.items %}
-                <tr>
-                    <td class="h-auto">
-                        {% for name,number,datetime in order%}
-                        {{Name}}
-                        {{number}}
-                        {{datetime}}
-                        {% endfor %}
-                        {% for item in items %}
-                        {{item}}
-                        {% endfor %}
-                    </td>
-                </tr>
-                {% endfor %}
-            </tc> {% endcomment %}
-        </tbody>
-    </table>
+                <form action="/change_order_status/" method="post">
+                    <input type="hidden" id="order_id" name="order_id" value="{{ order.pk }}"></input>
+                    <input type="submit" id="move_dir" name="move_dir" value="<<" class="border w-24 bg-purple-300 rounded-md"></input>
+                    {% csrf_token %}
+                </form>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
 {% endblock %}
 ```
