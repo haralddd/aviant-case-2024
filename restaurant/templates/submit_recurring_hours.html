@@ -1,0 +1,21 @@
+{% comment %} Make a input bar on the side {% endcomment %}
+
+<div class="bg-gray-50 border">
+    <form action="/submit_recurring_hours/" method="post">
+        <label for="day">Day</label>
+        <select name="day" id="day">
+            {% for weekday in weekdays %}
+                <option value="{{weekday.0}}">{{weekday.1}}</option>
+            {% endfor %}
+        </select>
+        <label for="closed">Closed all day</label>
+        <input type="checkbox" name="closed" id="closed">
+        <label for="open">Opening time</label>
+        <input type="time" name="open" id="open" value="08:00" disabled="">
+        <label for="close_time">Closing time</label>
+        <input type="time" name="close_time" id="close_time" value="22:00">
+        <input type="submit" value="Submit">
+
+        {% csrf_token %}
+    </form>
+</div>

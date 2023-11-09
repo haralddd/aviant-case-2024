@@ -1,0 +1,44 @@
+[
+    {
+        "model": "staff_interface.RecurringHours",
+        "pk": 0,
+        "fields": {
+            "day": 0
+        }
+    },
+    {
+        "model": "staff_interface.RecurringHours",
+        "pk": 1,
+        "fields": {
+            "day": 1
+        }
+    },
+    {
+        "model": "staff_interface.RecurringHours",
+        "pk": 2,
+        "fields": {
+            "day": 2
+        }
+    },
+    {
+        "model": "staff_interface.RecurringHours",
+        "pk": 3,
+        "fields": {
+            "day": 3
+        }
+    },
+    {
+        "model": "staff_interface.RecurringHours",
+        "pk": 4,
+        "fields": {
+            "day": 4
+        }
+    },
+    {
+        "model": "staff_interface.RecurringHours",
+        "pk": 5,
+        "fields": {
+            "day": 5
+        }
+    }
+]

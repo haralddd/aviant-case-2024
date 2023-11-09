@@ -1,0 +1,92 @@
+[
+    {
+        "model": "staff_interface.MenuItem",
+        "pk": 6,
+        "fields": {
+            "name": "Menu Item 0",
+            "description": "Description of menu item 0",
+            "price": 91
+        }
+    },
+    {
+        "model": "staff_interface.MenuItem",
+        "pk": 7,
+        "fields": {
+            "name": "Menu Item 1",
+            "description": "Description of menu item 1",
+            "price": 81
+        }
+    },
+    {
+        "model": "staff_interface.MenuItem",
+        "pk": 8,
+        "fields": {
+            "name": "Menu Item 2",
+            "description": "Description of menu item 2",
+            "price": 100
+        }
+    },
+    {
+        "model": "staff_interface.MenuItem",
+        "pk": 9,
+        "fields": {
+            "name": "Menu Item 3",
+            "description": "Description of menu item 3",
+            "price": 30
+        }
+    },
+    {
+        "model": "staff_interface.MenuItem",
+        "pk": 10,
+        "fields": {
+            "name": "Menu Item 4",
+            "description": "Description of menu item 4",
+            "price": 57
+        }
+    },
+    {
+        "model": "staff_interface.MenuItem",
+        "pk": 11,
+        "fields": {
+            "name": "Menu Item 5",
+            "description": "Description of menu item 5",
+            "price": 35
+        }
+    },
+    {
+        "model": "staff_interface.MenuItem",
+        "pk": 12,
+        "fields": {
+            "name": "Menu Item 6",
+            "description": "Description of menu item 6",
+            "price": 83
+        }
+    },
+    {
+        "model": "staff_interface.MenuItem",
+        "pk": 13,
+        "fields": {
+            "name": "Menu Item 7",
+            "description": "Description of menu item 7",
+            "price": 39
+        }
+    },
+    {
+        "model": "staff_interface.MenuItem",
+        "pk": 14,
+        "fields": {
+            "name": "Menu Item 8",
+            "description": "Description of menu item 8",
+            "price": 71
+        }
+    },
+    {
+        "model": "staff_interface.MenuItem",
+        "pk": 15,
+        "fields": {
+            "name": "Menu Item 9",
+            "description": "Description of menu item 9",
+            "price": 99
+        }
+    }
+]

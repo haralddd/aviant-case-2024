@@ -1,0 +1,110 @@
+{% extends "_base.html" %}
+
+{% block content %}
+    <table class="table-fixed w-2/3 h-full overflow-scroll">
+        <thead>
+            <tc>
+                <th class="w-1/4">Pending</th>
+            </tc>
+            <tc>
+                <th class="w-1/4">In progress</th>
+            </tc>
+            <tc>
+                <th class="w-1/4">Completed</th>
+            </tc>
+            <tc>
+                <th class="w-1/4">Cancelled</th>
+            </tc>
+        </thead>
+        <tbody>
+            <tc>
+                {% for order in PENDING %}
+                <tr>
+                    <td class="h-auto">
+                        {% for details in order%}
+                            {{details}}
+                        {% endfor %}
+                    </td>
+                </tr>
+                {% endfor %}
+                
+                {% for order in IN_PROGRESS %}
+                <tr>
+                    <td class="h-auto">
+                        {% for details in order%}
+                            {{details}}
+                        {% endfor %}
+                    </td>
+                </tr>
+                {% endfor %}
+                {% for order in COMPLETED %}
+                <tr>
+                    <td class="h-auto">
+                        {% for details in order%}
+                            {{details}}
+                        {% endfor %}
+                    </td>
+                </tr>
+                {% endfor %}
+                {% for order in CANCELLED %}
+                <tr>
+                    <td class="h-auto">
+                        {% for details in order%}
+                            {{details}}
+                        {% endfor %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tc>
+            {% comment %} <tc>
+                {% for id,items in IN_PROGRESS.items %}
+                <tr>
+                    <td class="h-auto">
+                        {% for name,number,datetime in order%}
+                        {{Name}}
+                        {{number}}
+                        {{datetime}}
+                        {% endfor %}
+                        {% for item in items %}
+                        {{item}}
+                        {% endfor %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tc>
+            <tc>
+                {% for id,items in COMPLETED.items %}
+                <tr>
+                    <td class="h-auto">
+                        {% for name,number,datetime in order%}
+                        {{Name}}
+                        {{number}}
+                        {{datetime}}
+                        {% endfor %}
+                        {% for item in items %}
+                        {{item}}
+                        {% endfor %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tc>
+            <tc>
+                {% for id,items in CANCELLED.items %}
+                <tr>
+                    <td class="h-auto">
+                        {% for name,number,datetime in order%}
+                        {{Name}}
+                        {{number}}
+                        {{datetime}}
+                        {% endfor %}
+                        {% for item in items %}
+                        {{item}}
+                        {% endfor %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tc> {% endcomment %}
+        </tbody>
+    </table>
+{% endblock %}
+```

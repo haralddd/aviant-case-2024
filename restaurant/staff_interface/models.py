@@ -2,7 +2,7 @@ from django.db import models
 
 from datetime import datetime, time
 
-class OpeningHours(models.Model):
+class RecurringHours(models.Model):
     class weekdays(models.IntegerChoices):
         MONDAY = 0
         TUESDAY = 1
@@ -20,8 +20,10 @@ class OpeningHours(models.Model):
     close_time = models.TimeField(default=DEFAULT_CLOSE_TIME_RECURRING)
     
     def __str__(self):
-        return self.get_weekday_str() + ":\t " + (
-            self.open_time.strftime("%H:%M") + " to " +
+        return (
+            str(self.day)
+            + ": \t"+ self.open_time.strftime("%H:%M") 
+            + " to " +
             self.close_time.strftime("%H:%M"))
         
         
@@ -34,17 +36,17 @@ class OpeningHours(models.Model):
         self.save()
         
     def set_default_open_time(self, time):
-        OpeningHours.DEFAULT_OPEN_TIME_RECURRING = time
+        RecurringHours.DEFAULT_OPEN_TIME_RECURRING = time
         self.save()
     
     def set_default_close_time(self, time):
-        OpeningHours.DEFAULT_CLOSE_TIME_RECURRING = time
+        RecurringHours.DEFAULT_CLOSE_TIME_RECURRING = time
         self.save()
         
     def get_weekday_str(self):
         return self.weekdays(self.day).name
 
-class OpeningHoursSpecific(models.Model):
+class SpecificHours(models.Model):
     # Model for specific dates, will override recurring opening hours
     # Could have used OpeningHours as parent class, but would require some (maybe unnecessary) abstraction
     DEFAULT_OPEN_TIME = "08:00"
@@ -54,14 +56,14 @@ class OpeningHoursSpecific(models.Model):
     close_time = models.TimeField(default=DEFAULT_CLOSE_TIME)
     
     def __str__(self):
-        return self.date + ":\t " + (
+        return self.date.strftime("%Y-%m-%d") + ": \t" + (
             self.open_time.strftime("%H:%M") + " to " +
             self.close_time.strftime("%H:%M"))
     def set_default_open_time(self, time):
-        OpeningHoursSpecific.DEFAULT_OPEN_TIME = time.strftime("%H:%M")
+        SpecificHours.DEFAULT_OPEN_TIME = time.strftime("%H:%M")
         
     def set_default_close_time(self, time):
-        OpeningHoursSpecific.DEFAULT_CLOSE_TIME = time.strftime("%H:%M")
+        SpecificHours.DEFAULT_CLOSE_TIME = time.strftime("%H:%M")
     
     def set_open_time(self, time):
         self.open_time = time
@@ -98,10 +100,8 @@ class Order(models.Model):
     name = models.CharField(max_length=100)
     phone_number = models.CharField(max_length=20)
     datetime = models.DateTimeField()
-    order = models.TextField()
     items = models.ManyToManyField(MenuItem)
     status = models.IntegerField()
-    total_price = models.DecimalField(max_digits=5, decimal_places=2)
     
     def __str__(self):
         return self.name
@@ -121,6 +121,12 @@ class Order(models.Model):
     def set_cancelled(self):
         self.status = "Cancelled"
         self.save()
+        
+    def get_total_price(self):
+        total_price = 0
+        for item in self.items.all():
+            total_price += item.price
+        return total_price
 
 
 # Create your models here.
