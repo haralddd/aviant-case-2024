@@ -31,7 +31,7 @@
 
         <div>
             {% for order in IN_PROGRESS %}
-            <div class="border bg-gray-100 rounded-md p-2 m-1 mb-2 min-h-full">
+            <div class="border bg-gray-100 rounded-md p-2 m-1 mb-2">
                 <div class=""><b>{{ order.name }}</b></div>
                 <div class="text-gray-600">{{ order.phone_number }}</div>
                 <div class="text-gray-600">{{ order.datetime|date:'Y/m/d - H:i' }}</div>
@@ -51,7 +51,7 @@
 
         <div>
             {% for order in COMPLETED %}
-            <div class="border bg-gray-100 rounded-md p-2 m-1 mb-2 min-h-full">
+            <div class="border bg-gray-100 rounded-md p-2 m-1 mb-2">
                 <div class=""><b>{{ order.name }}</b></div>
                 <div class="text-gray-600">{{ order.phone_number }}</div>
                 <div class="text-gray-600">{{ order.datetime|date:'Y/m/d - H:i' }}</div>
